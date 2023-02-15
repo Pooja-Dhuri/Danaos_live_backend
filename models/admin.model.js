@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const bcrypt  = require("bcrypt");
+const bcrypt = require("bcrypt");
 
-var emailSchema = new mongoose.Schema(
+var adminSchema = new mongoose.Schema(
   {
-    firstname: {
+    name: {
       type: String,
       required: true,
     },
@@ -18,13 +18,14 @@ var emailSchema = new mongoose.Schema(
     },
     role: {
       type: String,
+      required: true,
       default: "superuser",
     },
-    ar: {
+    accessroutes: {
       type: Array,
       default: [
         "frontdesk",
-        "backdesk",
+        "backoffice",
         "foodorder",
         "sales",
         "loyalitymgmt",
@@ -35,17 +36,18 @@ var emailSchema = new mongoose.Schema(
     },
   },
   {
+    versionKey: false,
     timestamps: true,
   }
 );
 
-emailSchema.pre("save", async function (next) {
+adminSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSaltSync(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
-emailSchema.methods.isPasswordMatched = async function (enteredPassword) {
+adminSchema.methods.isPasswordMatched = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const superMgmtModel = mongoose.model("cruisemember", emailSchema);
-module.exports = { superMgmtModel };
+const adminModel = mongoose.model("cruisemember", adminSchema);
+module.exports = { adminModel };

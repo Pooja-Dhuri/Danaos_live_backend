@@ -4,9 +4,9 @@ var cors = require("cors");
 const port = 8080 || process.env.PORT;
 const { connection } = require("./config/db");
 const bodyParser = require("body-parser");
-const mgmtrouter = require("./routes/auth.route");
-const PaxInfo = require("./routes/Pax.router");
+const PaxInfo = require("./routes/pax.router");
 const { notFound, errorhandle } = require("./middleware/errorhandler");
+const adminrouter = require("./routes/admin.route");
 
 app.use(cors());
 app.use(express.json());
@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.send("home");
 });
 
-app.use("/user", mgmtrouter);
+app.use("/admin", adminrouter);
 app.use("/paxinfo", PaxInfo);
 app.use(notFound);
 app.use(errorhandle);

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const pax = Router();
-const PaxInfo = require("../models/PaxInfo.model");
+const PaxInfo = require("../models/paxInfo.model");
 
 pax.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -27,7 +27,7 @@ pax.post("/", async (req, res) => {
     } = req.body;
 
     const count = await PaxInfo.find();
-    console.log("count", count);
+    // console.log("count", count);
     const PaxData = await PaxInfo.create({
       fullName,
       email,

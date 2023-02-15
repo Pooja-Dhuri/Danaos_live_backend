@@ -5,6 +5,7 @@ const port = 8080 || process.env.PORT;
 const { connection } = require("./config/db");
 const bodyParser = require("body-parser");
 const mgmtrouter = require("./routes/auth.route");
+const PaxInfo = require("./routes/Pax.router");
 const { notFound, errorhandle } = require("./middleware/errorhandler");
 
 app.use(cors());
@@ -15,8 +16,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
   res.send("home");
 });
-  
+
 app.use("/user", mgmtrouter);
+app.use("/paxinfo", PaxInfo);
 app.use(notFound);
 app.use(errorhandle);
 
@@ -28,5 +30,5 @@ app.listen(port, async () => {
     console.log(error);
   }
 
-  console.log("listenign to the port " + port);
+  console.log("listening to the port " + port);
 });

@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 
 app.use("/admin", adminrouter);
 app.use("/paxinfo", PaxInfo);
+
 app.use(notFound);
 app.use(errorhandle);
 

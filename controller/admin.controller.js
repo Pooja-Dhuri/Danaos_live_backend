@@ -28,7 +28,7 @@ const loginUser = asyncHandler(async (req, res) => {
       name: findUser?.name,
       email: findUser?.email,
       role: findUser?.role,
-      accessroutes: findUser?.ar,
+      accessroutes: findUser?.accessroutes,
       token: generateToken(findUser?._id),
     });
   } else {

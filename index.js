@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const PaxInfo = require("./routes/pax.router");
 const { notFound, errorhandle } = require("./middleware/errorhandler");
 const adminrouter = require("./routes/admin.route");
+const dishRouter = require("./routes/DishInfo");
 
 app.use(cors());
 app.use(express.json());
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/admin", adminrouter);
 app.use("/paxinfo", PaxInfo);
+app.use("/dish",dishRouter)
 
 app.use(notFound);
 app.use(errorhandle);

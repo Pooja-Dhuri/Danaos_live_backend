@@ -16,6 +16,7 @@ const PaxInfoSchema = new Schema(
     nationality: { type: String, required: true },
     issuePlace: { type: String, required: true },
     issueDate: { type: String, required: true },
+    expiryDate: { type: String, required: true },
   },
   {
     versionKey: false,

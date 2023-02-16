@@ -24,6 +24,7 @@ pax.post("/", async (req, res) => {
       nationality,
       issuePlace,
       issueDate,
+      expiryDate
     } = req.body;
 
     const count = await PaxInfo.find();
@@ -43,6 +44,7 @@ pax.post("/", async (req, res) => {
       nationality,
       issuePlace,
       issueDate,
+      expiryDate
     });
     return res.send(PaxData);
   } catch (err) {

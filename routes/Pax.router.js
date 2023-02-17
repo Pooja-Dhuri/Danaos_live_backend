@@ -24,7 +24,7 @@ pax.post("/", async (req, res) => {
       nationality,
       issuePlace,
       issueDate,
-      expiryDate
+      expiryDate,
     } = req.body;
 
     const count = await PaxInfo.find();
@@ -44,7 +44,7 @@ pax.post("/", async (req, res) => {
       nationality,
       issuePlace,
       issueDate,
-      expiryDate
+      expiryDate,
     });
     return res.send(PaxData);
   } catch (err) {
@@ -54,10 +54,17 @@ pax.post("/", async (req, res) => {
 
 pax.get("/", async (req, res) => {
   try {
-    const PaxData = await PaxInfo.find();
-    return res.send(PaxData);
+    const queryObject = {};
+    let { fullName } = req.query;
+    if (fullName) {
+      queryObject.fullName = { $regex: fullName, $options: "i" };
+    }
+    const data = PaxInfo.find(queryObject);
+    const paxApi = await data;
+    console.log(paxApi);
+    res.send(paxApi);
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 });
 

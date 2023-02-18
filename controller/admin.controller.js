@@ -3,7 +3,23 @@ const { generateToken } = require("../config/jwtToken");
 const { adminModel } = require("../models/admin.model");
 
 const homeRoute = asyncHandler(async (req, res) => {
-  res.send("Admin Home Route ");
+  const findUser = await adminModel.find();
+  res.send(findUser);
+});
+
+const homeRouteByID = asyncHandler(async (req, res) => {
+  const findUser = await adminModel.findById(req.params.id);
+  res.send(findUser);
+});
+
+const homeRouteByIdAndUpdate = asyncHandler(async (req, res) => {
+  const updateUser = await adminModel.findByIdAndUpdate(req.params.id, {
+    ...req.body,
+  });
+  if (updateUser) {
+    const user = { _id: req.params.id, ...req.body };
+    res.send(user);
+  }
 });
 
 const createUser = asyncHandler(async (req, res) => {
@@ -36,4 +52,10 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createUser, loginUser ,homeRoute};
+module.exports = {
+  createUser,
+  loginUser,
+  homeRoute,
+  homeRouteByID,
+  homeRouteByIdAndUpdate,
+};

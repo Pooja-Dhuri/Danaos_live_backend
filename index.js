@@ -9,6 +9,7 @@ const { notFound, errorhandle } = require("./middleware/errorhandler");
 const adminrouter = require("./routes/admin.route");
 const dishRouter = require("./routes/DishInfo");
 const TableChairRouter = require("./routes/tablechair.router");
+const cardRouter = require("./routes/paymentcard.route");
 
 app.use(cors());
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use("/admin", adminrouter);
 app.use("/paxinfo", PaxInfo);
 app.use("/dish",dishRouter);
 app.use("/tablechair", TableChairRouter);
+app.use("/cardinfo", cardRouter);
 
 app.use(notFound);
 app.use(errorhandle);

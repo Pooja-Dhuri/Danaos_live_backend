@@ -74,4 +74,15 @@ pax.delete("/:id", async (req, res) => {
   res.send(user);
 });
 
+// pax.delete("/deleteAll", async (req, res) => {
+//   try {
+//     const deleteData = await PaxInfo.deleteMany();
+//     res.send("deleteData");
+//     //   res.send("Delete Item ");
+//   } catch (error) {
+//     console.log({ msg: "Something went wrong in delete item" });
+//     console.log(error);
+//   }
+// });
+
 module.exports = pax;

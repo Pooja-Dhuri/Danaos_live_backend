@@ -1,23 +1,34 @@
-const express=require("express")
-const dishRouter=express.Router();
-const dishData=require("../models/dishes")
+const express = require("express");
+const dishRouter = express.Router();
+const dishData = require("../models/dishes");
 
 dishRouter.get("/", async (req, res) => {
-    const dishdisplay = await dishData.find();
-    res.send(dishdisplay);
-  });
-  
-dishRouter.post("/", async (req, res) => {
-    let payload = req.body;
-    try {
-      let dishcreate = new dishData(payload);
-      await dishcreate.save();
-      res.send("Create Item ");
-    } catch (error) {
-      console.log({ msg: "Something went wrong in create item" });
-      console.log(error);
+  try {
+    const queryObject = {};
+    let { type } = req.query;
+    if (type) {
+      queryObject.type = { $regex: type, $options: "i" };
     }
-  });
+    const data = dishData.find(queryObject);
+    const dishApi = await data;
+    // console.log(dishApi);
+    res.send(dishApi);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+dishRouter.post("/", async (req, res) => {
+  let payload = req.body;
+  try {
+    let dishcreate = new dishData(payload);
+    await dishcreate.save();
+    res.send("Create Item ");
+  } catch (error) {
+    console.log({ msg: "Something went wrong in create item" });
+    console.log(error);
+  }
+});
 
 //   dishRouter.delete("/deletedish/:id", async (req, res) => {
 //     let id = req.params.id;
@@ -30,4 +41,4 @@ dishRouter.post("/", async (req, res) => {
 //     }
 //   });
 
-  module.exports=dishRouter;
+module.exports = dishRouter;

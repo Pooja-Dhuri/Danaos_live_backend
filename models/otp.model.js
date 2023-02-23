@@ -3,6 +3,7 @@ const { Schema, model, mongoose } = require("mongoose");
 const OtpSchema = new Schema(
   {
     cardNumber: { type: Number, required: true },
+    mobileNo: { type: Number, required: true },
   },
   {
     versionKey: false,

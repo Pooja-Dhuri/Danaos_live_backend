@@ -1,3 +1,8 @@
+const accountSid = "ACd6d6cef55220cb2891a9cda4e486f916";
+const authToken = "b1ef29134457a892da000e8d7506a0bb";
+const verifySid = "VA07377a316b03ac27f903dfdeb94227db";
+const client = require("twilio")(accountSid, authToken);
+
 const express = require("express");
 const OtpData = require("../models/otp.model");
 const PaxData = require("../models/paxInfo.model");
@@ -49,7 +54,7 @@ cardRouter.delete("/deleteAll", async (req, res) => {
 
 cardRouter.post("/otp", async (req, res) => {
   try {
-    let { cardNumber } = req.body;
+    let { cardNumber, mobileNo } = req.body;
 
     let paxCreate = await PaymentCardData.find({
       cardNumber: cardNumber,
@@ -57,14 +62,81 @@ cardRouter.post("/otp", async (req, res) => {
 
     console.log("paxCreate", paxCreate[0].AuthorId.mobileNo);
     const Mobile = paxCreate[0].AuthorId.mobileNo;
+
     const PaxCreate1 = await OtpData.create({
-      ...req.body,
+      cardNumber,
+      mobileNo: Mobile,
     });
 
-    return res.send({ PaxCreate1, Mobile });
+    res.send({ PaxCreate1 });
+
+    // otp verification
+
+    client.verify.v2
+      .services(verifySid)
+      .verifications.create({ to: `+91${Mobile}`, channel: "sms" })
+      .then((verification) => console.log(verification.status))
+      .then(() => {
+        const readline = require("readline").createInterface({
+          input: process.stdin,
+          output: process.stdout,
+        });
+        readline.question("Please enter the OTP:", (otpCode) => {
+          client.verify.v2
+            .services(verifySid)
+            .verificationChecks.create({ to: `+91${Mobile}`, code: otpCode })
+            .then((verification_check) =>
+              console.log(verification_check.status)
+            )
+            .then(() => readline.close());
+        });
+      });
   } catch (err) {
     res.status(500).send(err);
   }
+});
+
+cardRouter.get("/verify", (req, res) => {
+  try {
+    if (req.query.mobileNo && req.query.code) {
+      client.verify
+        .services(verifySid)
+        .verificationChecks.create({
+          to: `+91${req.query.mobileNo}`,
+          code: req.query.code,
+        })
+        .then((data) => {
+          // console.log("vishal dtata");
+          if (data.status === "approved") {
+            res.status(200).send({
+              message: "User is Verified!!",
+              data,
+            });
+          } else {
+            res.status(404).send({
+              message: "Wrong phone number or code ",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      res.status(400).send({
+        message: "Wrong phone number or code :(",
+        mobileNo: req.query.mobileNo,
+        data,
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+cardRouter.get("/otp", async (req, res) => {
+  const otpInfo = await OtpData.find();
+  res.send(otpInfo);
 });
 
 module.exports = cardRouter;

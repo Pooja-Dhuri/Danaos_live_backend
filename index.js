@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const PaxInfo = require("./routes/pax.router");
 const { notFound, errorhandle } = require("./middleware/errorhandler");
 const adminrouter = require("./routes/admin.route");
-const dishRouter = require("./routes/DishInfo");
+const dishRouter = require("./routes/dishInfo");
 const TableChairRouter = require("./routes/tablechair.router");
 const cardRouter = require("./routes/paymentcard.route");
 

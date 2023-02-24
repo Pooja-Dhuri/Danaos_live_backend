@@ -101,7 +101,7 @@ cardRouter.post("/otp", async (req, res) => {
 
     client.verify.v2
       .services(verifySid)
-      .verifications.create({ to: "+919075427560", channel: "sms" })
+      .verifications.create({ to: `+91${Mobile}`, channel: "sms" })
       .then((verification) => console.log(verification.status))
       .then(() => {
         const readline = require("readline").createInterface({
@@ -111,7 +111,7 @@ cardRouter.post("/otp", async (req, res) => {
         readline.question("Please enter the OTP:", (otpCode) => {
           client.verify.v2
             .services(verifySid)
-            .verificationChecks.create({ to: "+919075427560", code: otpCode })
+            .verificationChecks.create({ to: `+91${Mobile}`, code: otpCode })
             .then((verification_check) =>
               console.log(verification_check.status)
             )

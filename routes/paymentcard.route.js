@@ -3,6 +3,11 @@
 // const verifySid = "VA07377a316b03ac27f903dfdeb94227db";
 // const client = require("twilio")(accountSid, authToken);
 
+const accountSid = "AC14fd0d0664e6739e95a691ac3ee24ba1";
+const authToken = "daf3a0fa7a93b3826602ecc8a35e9d02";
+const verifySid = "VA76f22837c30a058bc24dc44a4dc88dff";
+const client = require("twilio")(accountSid, authToken);
+
 const express = require("express");
 const OtpData = require("../models/otp.model");
 const PaxData = require("../models/paxInfo.model");
@@ -67,8 +72,8 @@ cardRouter.post("/otp", async (req, res) => {
       cardNumber,
       mobileNo: Mobile,
     });
-
-    res.send({ PaxCreate1 });
+    let id=paxCreate[0]._id
+    res.send({PaxCreate1,id});
 
     // otp verification
     // client.verify.v2
@@ -94,10 +99,6 @@ cardRouter.post("/otp", async (req, res) => {
     // Download the helper library from https://www.twilio.com/docs/node/install
     // Set environment variables for your credentials
     // Read more at http://twil.io/secure
-    const accountSid = "AC14fd0d0664e6739e95a691ac3ee24ba1";
-    const authToken = "5db97ec508af8d22259499939d7ff871";
-    const verifySid = "VA76f22837c30a058bc24dc44a4dc88dff";
-    const client = require("twilio")(accountSid, authToken);
 
     client.verify.v2
       .services(verifySid)
@@ -161,9 +162,20 @@ cardRouter.get("/verify", (req, res) => {
   }
 });
 
-cardRouter.get("/otp", async (req, res) => {
-  const otpInfo = await OtpData.find();
-  res.send(otpInfo);
+cardRouter.get("/checkout/:_id", async (req, res) => {
+  const id = req.params;
+  try {
+    const data = await PaymentCardData.find({ _id: id }).populate("AuthorId");
+    console.log(data);
+    res.send(data);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
 });
+
+// cardRouter.get("/otp", async (req, res) => {
+//   const otpInfo = await OtpData.find();
+//   res.send(otpInfo);
+// });
 
 module.exports = cardRouter;

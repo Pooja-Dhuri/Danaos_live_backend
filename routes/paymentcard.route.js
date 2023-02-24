@@ -1,7 +1,7 @@
-const accountSid = "ACd6d6cef55220cb2891a9cda4e486f916";
-const authToken = "b1ef29134457a892da000e8d7506a0bb";
-const verifySid = "VA07377a316b03ac27f903dfdeb94227db";
-const client = require("twilio")(accountSid, authToken);
+// const accountSid = "ACd6d6cef55220cb2891a9cda4e486f916";
+// const authToken = "b1ef29134457a892da000e8d7506a0bb";
+// const verifySid = "VA07377a316b03ac27f903dfdeb94227db";
+// const client = require("twilio")(accountSid, authToken);
 
 const express = require("express");
 const OtpData = require("../models/otp.model");
@@ -71,10 +71,37 @@ cardRouter.post("/otp", async (req, res) => {
     res.send({ PaxCreate1 });
 
     // otp verification
+    // client.verify.v2
+    //   .services(verifySid)
+    //   .verifications.create({ to: `+91${Mobile}`, channel: "sms" })
+    //   .then((verification) => console.log(verification.status))
+    //   .then(() => {
+    //     const readline = require("readline").createInterface({
+    //       input: process.stdin,
+    //       output: process.stdout,
+    //     });
+    //     readline.question("Please enter the OTP:", (otpCode) => {
+    //       client.verify.v2
+    //         .services(verifySid)
+    //         .verificationChecks.create({ to: `+91${Mobile}`, code: otpCode })
+    //         .then((verification_check) =>
+    //           console.log(verification_check.status)
+    //         )
+    //         .then(() => readline.close());
+    //     });
+    //   });
+
+    // Download the helper library from https://www.twilio.com/docs/node/install
+    // Set environment variables for your credentials
+    // Read more at http://twil.io/secure
+    const accountSid = "AC14fd0d0664e6739e95a691ac3ee24ba1";
+    const authToken = "5db97ec508af8d22259499939d7ff871";
+    const verifySid = "VA76f22837c30a058bc24dc44a4dc88dff";
+    const client = require("twilio")(accountSid, authToken);
 
     client.verify.v2
       .services(verifySid)
-      .verifications.create({ to: `+91${Mobile}`, channel: "sms" })
+      .verifications.create({ to: "+919075427560", channel: "sms" })
       .then((verification) => console.log(verification.status))
       .then(() => {
         const readline = require("readline").createInterface({
@@ -84,7 +111,7 @@ cardRouter.post("/otp", async (req, res) => {
         readline.question("Please enter the OTP:", (otpCode) => {
           client.verify.v2
             .services(verifySid)
-            .verificationChecks.create({ to: `+91${Mobile}`, code: otpCode })
+            .verificationChecks.create({ to: "+919075427560", code: otpCode })
             .then((verification_check) =>
               console.log(verification_check.status)
             )
